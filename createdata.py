@@ -69,7 +69,7 @@ bezahlteRechnungen = []
 
 for i in range(100):
     rechnungsdatum.append(random_date())
-    bezahlteRechnungen.append(randint(0, 1))
+    bezahlteRechnungen.append(choice(["TRUE", "FALSE"]))
 
 rechnungen = {
     # erstellt Liste mit ganzen Zahlen von 1 bis 100
@@ -97,12 +97,12 @@ schaeden = {
     "serien_nr": ["12345", "923047", "392732"],
     "beschreibung": ["Kratzer am Display", "Schraube fehlt", "Lauffläche vorne zerkratzt"]
 }
-
+"""
 ausleiher = {
     "ausleiher_id": [1, 2, 3],
     "kontakdaten_id": [5, 6, 7]
 }
-
+"""
 
 # Der Einfachheit halber erstelle ich Ausleihen, die immer nur eine Woche gehen.
 # Das Enddatum der einen Ausleihe +1 ist das Startdatum der nächsten
@@ -123,7 +123,7 @@ for i in range(50):
     enddatum.append(eDate)
     sDate = eDate + timedelta(days=1)
 
-    kontaktdaten_id.append(choice(ausleiher.get("ausleiher_id")))
+    kontaktdaten_id.append(choice(kontaktdaten.get("kontaktdaten_id")[4:]))
     rechnungs_nr.append(rechnungen.get("rechnungs_nr")[i])
 
 ausleihe = {
@@ -190,7 +190,7 @@ datum = []
 anzahl = []
 angebots_id = []
 freieRgNr = rechnungen.get("rechnungs_nr")[50:]
-freieRgNr = np.append(freieRgNr, 0)
+freieRgNr = np.append(freieRgNr, NULL)
 rechnungs_nr = []
 
 for i in range(300):
@@ -230,8 +230,8 @@ arbeitsstunden = {
 # Liste mit Dictionarys und den Namen dieser. Beide müssen die Inhalte in gleicher Reihenfolge haben!!
 
 dictionarys = [plz, kontaktdaten, rechnungssteller, rechnungen, geraetetyp, geraete, schaeden,
-               ausleiher, ausleihe, ausleiheninhalt, studio, angebotstyp, angebot, arbeitsstunden]
-dictianarys_names = ["plz", "kontaktdaten", "rechnungssteller", "rechnungen", "geraetetyp", "geraete", "schaeden", "ausleiher", "ausleihe",
+               ausleihe, ausleiheninhalt, studio, angebotstyp, angebot, arbeitsstunden]
+dictianarys_names = ["plz", "kontaktdaten", "rechnungssteller", "rechnungen", "geraetetyp", "geraete", "schaeden", "ausleihe",
                      "ausleiheninhalt", "studio", "angebotstyp", "angebot", "arbeitsstunden"]
 
 
@@ -252,25 +252,32 @@ for count, element in enumerate(dictionarys):  # Geht über jedes dictionary
         for i, e in enumerate(tuples):
 
             # Prüft auf Datentyp und wandelt in String um. Anschließend wird überprüft ob der String beendet werden muss oder nicht.
-            if (isinstance(e[1][x], Number)):
+            if(e[1][x] == NULL):
+                if (i == len(tuples)-1):
+                    query += "NULL );"
+                else:
+                    query += "NULL, "
+                    
+            
+            elif (isinstance(e[1][x], Number)):
 
                 if (i == len(tuples)-1):
                     query += str(e[1][x])
-                    query += " )"
+                    query += " );"
                 else:
                     query += str(e[1][x])
                     query += ", "
             elif (isinstance(e[1][x], date)):
 
                 if (i == len(tuples)-1):
-                    query += str("'" + datetime.strftime(e[1][x]) + "'" + " )")
+                    query += str("'" + datetime.strftime(e[1][x]) + "'" + " );")
 
                 else:
                     query += str("'" + datetime.strftime(e[1][x], "%m/%d/%Y") + "'" + ", ")
 
             else:
                 if (i == len(tuples)-1):
-                    query += str("'" + e[1][x] + "'" + " )")
+                    query += str("'" + e[1][x] + "'" + " );")
 
                 else:
                     query += str("'" + e[1][x] + "'" + ", ")
